@@ -13,9 +13,7 @@ Model::Model(int resX, int resY, int resZ)
 	m_surface = Voxel(m_corrX.m_resolution, Pixel(m_corrY.m_resolution, vector<bool>(m_corrZ.m_resolution, false)));
 	m_enqueued = Voxel(m_corrX.m_resolution, Pixel(m_corrY.m_resolution, vector<bool>(m_corrZ.m_resolution, false)));
 	m_visited = Voxel(m_corrX.m_resolution, Pixel(m_corrY.m_resolution, vector<bool>(m_corrZ.m_resolution, false)));
-	//m_status 表示是否入队，这里用enqueue
-	//m_status2 表示是否访问，这里用visited
-	for (int i = 0; i < 6; i++)
+	for (int i = 0; i < 26; i++)
 		dp[i] = Point(dx[i], dy[i], dz[i]);
 	surfacePoints.clear();
 }
@@ -180,13 +178,11 @@ void Model::getSurface()
 	//		|| indexY >= m_corrY.m_resolution
 	//		|| indexZ >= m_corrZ.m_resolution;
 	//};
-	int visitcount = 0;
 
 	for (int indexX = 0; indexX < m_corrX.m_resolution; indexX++)
 		for (int indexY = 0; indexY < m_corrY.m_resolution; indexY++)
 			for (int indexZ = 0; indexZ < m_corrZ.m_resolution; indexZ++)
 			{
-				visitcount++;
 				Point p(indexX, indexY, indexZ);
 				insideHull(p);
 				if (voxel(p))
@@ -198,8 +194,6 @@ void Model::getSurface()
 						if (!visited(_p) && !outOfRange(indexX + dx[i], indexY + dy[i], indexZ + dz[i]))
 						{
 							insideHull(_p);
-							setVisited(_p);
-							visitcount++;
 						}
 						ans = ans || outOfRange(_p)
 							|| !voxel(_p);
@@ -222,39 +216,30 @@ void Model::BFS(Point p)
 	setEnqueued(p);
 	queue<Point> s;
 	s.push(p);
+	bool ans;
 
 	while (!s.empty())
 	{
 		p = s.front(); s.pop();
 		Point temp = p;
-		bool ans = false;
-		int count = 0;
+		ans = false;
 		for (int i = 0; i < 6; i++)
 		{
 			Point _p = dp[i] + p;
 			if (!outOfRange(_p))
 			{
-				if (!visited(_p))
+				if (insideHull(_p))
 				{
-					insideHull(_p);
-					setVisited(_p);
-					//m_visited[temp.x + dx[i]][temp.y + dy[i]][temp.z + dz[i]] = true;
-				}
-				if (voxel(_p))
-				{
-					if (!enqueued(_p))
+					if (!enqueued(_p) && !totalInside(_p))
 					{
-						/*m_enqueued[temp.x + dx[i]][temp.y + dy[i]][temp.z + dz[i]] = true;*/
 						setEnqueued(_p);
 						s.push(_p);
-						//cout << " Point(" << p.x << ", " << p.y << ", " << p.z << ") has been pushed" << endl;
 					}
 				}
 			}
 			ans = ans || outOfRange(_p) ||
 				!voxel(_p);
 		}
-		//m_surface[temp.x][temp.y][temp.z] = ans;
 		setSurface(p, ans);
 		if (ans)
 			surfacePoints.push_back(p);
@@ -430,7 +415,7 @@ bool Model::totalInside(const Point & p)
 		return false;
 
 	Point _p;
-	for (int i = 0; i < 6; i++)
+	for (int i = 0; i < 26; i++)
 	{
 		_p = dp[i] + p;
 		if (!insideHull(_p))

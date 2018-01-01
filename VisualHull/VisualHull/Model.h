@@ -86,10 +86,11 @@ public:
 
 
 private:
-	const int dx[6] = { -1, 0, 0, 0, 0, 1 };
-	const int dy[6] = { 0, 1, -1, 0, 0, 0 };
-	const int dz[6] = { 0, 0, 0, 1, -1, 0 };
-	Point dp[6];
+	//偏移                 前后左右上下								其他方向，一起构成魔方形状									
+	const int dx[26] = { -1, 0, 0, 0, 0, 1,   1, 1, 1, 1, 1, 1,-1,-1,-1,-1,-1,-1,    1, 1,-1,-1, 0, 0, 0, 0 };
+	const int dy[26] = { 0, 1, -1, 0, 0, 0,   1, 1, 1,-1,-1,-1,-1,-1,-1, 1, 1, 1,    0, 0, 0, 0, 1, 1, 1, 1 };
+	const int dz[26] = { 0, 0, 0, 1, -1, 0,   1, 0,-1, 1, 0,-1, 1, 0,-1, 1, 0,-1,    1,-1, 1,-1, 1,-1, 1,-1 };
+	Point dp[26];
 
 
 	bool outOfRange(int indexX, int indexY, int indexZ);
@@ -129,7 +130,7 @@ private:
 	int m_neiborSize;
 
 	std::vector<Projection> m_projectionList;
-	list<Point> surfacePoints;
+	vector<Point> surfacePoints;
 
 	Voxel m_voxel;
 	Voxel m_surface;
