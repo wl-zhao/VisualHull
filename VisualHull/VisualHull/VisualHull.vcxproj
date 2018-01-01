@@ -20,6 +20,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Model.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Model.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{260F80AA-BD9F-4F8F-8136-0EDFDFD0C53A}</ProjectGuid>
