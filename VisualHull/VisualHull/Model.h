@@ -14,43 +14,13 @@ using namespace std;
 class Point
 {
 public:
-	Point (bool inside = false, bool visited = false, bool enqueued = false):
-		inside(inside), visited(visited), enqueued(false){}
+	Point(int indexX, int indexY, int indexZ):x(indexX), y(indexY), z(indexZ){}
 
-	Point(const Point &p)
-	{
-		inside = p.inside; visited = p.visited; enqueued = p.enqueued; x = p.x; y = p.y; z = p.z;
-	}
-	bool inside;//是否在visualHull内部
-	bool visited;//是否访问过
-	bool enqueued;//是否在BFS中入队过
 	int x, y, z;
-	void setIndex(int index_x, int index_y, int index_z)
-	{
-		x = index_x;
-		y = index_y;
-		z = index_z;
-	}
 };
-class Line
-{
-public:
-	Line(){}
-	Line(int size, Point point):
-		m_points(vector<Point>(size, point))
-	{
-	}
-	Point& operator [](int i) 
-	{
-		return m_points[i];
-	}
-	
-	std::vector<Point> m_points;
-};
-//typedef std::vector<std::vector<bool>> Pixel;
-typedef std::vector<Line> Pixel;
+
+typedef std::vector<std::vector<bool>> Pixel;
 typedef std::vector<Pixel> Voxel;
-//typedef std::vector<std::vector<std::vector<bool>>> Visited;
 
 // 用于判断投影是否在visual hull内部
 struct Projection
@@ -116,8 +86,7 @@ public:
 private:
 	bool outOfRange(int indexX, int indexY, int indexZ);
 	bool insideHull(int indexX, int indexY, int indexZ);
-	void BFS(int indexX, int indexY, int indexZ);
-	void DFS(int indexX, int indexY, int indexZ);
+	void BFS(Point p);
 
 	CoordinateInfo m_corrX;
 	CoordinateInfo m_corrY;
@@ -129,4 +98,6 @@ private:
 
 	Voxel m_voxel;
 	Voxel m_surface;
+	Voxel visited;//是否访问过
+	Voxel enqueued;//是否入队过
 };
