@@ -5,6 +5,7 @@
 #include <time.h>
 #include <iostream>
 #include <fstream>
+#include <thread>
 #include <string>
 #include "Model.h"
 using namespace std;
@@ -22,6 +23,7 @@ int main(int argc, char** argv)
 		fout << "Skip the description" << endl;
 	else
 		fout << comment << endl;
+
 
 	clock_t t = clock();
 	clock_t last = clock();
@@ -61,41 +63,58 @@ int main(int argc, char** argv)
 	std::cout << "time: " << (float(last) / CLOCKS_PER_SEC) << "seconds\n";
 	fout << "|get surface|" << (float(last) / CLOCKS_PER_SEC) << "|" << endl;
 	sum += (float(last) / CLOCKS_PER_SEC);
-	last = clock();
 
-	// 将模型导出为xyz格式（不含法向信息）
-	model.saveModel("../../WithoutNormal.xyz");
-	std::cout << "save without normal done\n";
+	int sum1 = 0;
+	int sum2 = 0;
 
-	last = clock() - last;
-	std::cout << "time: " << (float(last) / CLOCKS_PER_SEC) << "seconds\n";
-	fout << "|save without normal|" << (float(last) / CLOCKS_PER_SEC) << "|" << endl;
-	sum += (float(last) / CLOCKS_PER_SEC);
-	last = clock();
+	auto without_normal = [&]() {
+		// 将模型导出为xyz格式（不含法向信息）
+		cout << "without normal" << endl;
+		clock_t la = clock();
 
-	// 将模型导出为xyz格式（含法向信息）
-	model.saveModelWithNormal("../../WithNormal.xyz");
-	std::cout << "save with normal done\n";
+		model.saveModel("../../WithoutNormal.xyz");
+		std::cout << "save without normal done\n";
+		la = clock() - la;
+		std::cout << "time: " << (float(la) / CLOCKS_PER_SEC) << "seconds\n";
+		fout << "|save without normal|" << (float(la) / CLOCKS_PER_SEC) << "|" << endl;
+		sum1 += (float(la) / CLOCKS_PER_SEC);
+	};
 
-	last = clock() - last;
-	std::cout << "time: " << (float(last) / CLOCKS_PER_SEC) << "seconds\n";
-	fout << "|save with normal|" << (float(last) / CLOCKS_PER_SEC) << "|" << endl;
-	sum += (float(last) / CLOCKS_PER_SEC);
+	auto with_normal = [&]() {
+		// 将模型导出为xyz格式（含法向信息）
+		cout << "with normal" << endl;
+		clock_t la = clock();
+		model.saveModelWithNormal("../../WithNormal.xyz");
+		std::cout << "save with normal done\n";
 
-	//泊松重建算法
-	last = clock();
-	system("PoissonRecon.x64 --in ../../WithNormal.xyz --out ../../mesh.ply");
-	std::cout << "save mesh.ply done\n";
+		la = clock() - la;
+		std::cout << "time: " << (float(la) / CLOCKS_PER_SEC) << "seconds\n";
+		fout << "|save with normal|" << (float(la) / CLOCKS_PER_SEC) << "|" << endl;
+		sum2 += (float(la) / CLOCKS_PER_SEC);
 
+		//泊松重建算法
+		la = clock();
+		system("PoissonRecon.x64 --in ../../WithNormal.xyz --out ../../mesh.ply");
+		std::cout << "save mesh.ply done\n";
+		la = clock() - la;
+		std::cout << "time: " << (float(la) / CLOCKS_PER_SEC) << "seconds\n";
+		fout << "|save mesh.ply|" << (float(la) / CLOCKS_PER_SEC) << "|" << endl;
+		sum2 += (float(la) / CLOCKS_PER_SEC);
+	};
 
-	last = clock() - last;
-	std::cout << "time: " << (float(last) / CLOCKS_PER_SEC) << "seconds\n";
-	fout << "|save mesh.ply|" << (float(last) / CLOCKS_PER_SEC) << "|" << endl;
-	sum += (float(last) / CLOCKS_PER_SEC);
-	last = clock();
-	t = clock() - t;
-	std::cout << "time: " << (float(t) / CLOCKS_PER_SEC) << "seconds\n";
+	thread wout_nm(without_normal);
+	//thread with_nm(with_normal);
+
+	//wout_nm.join();
+	//with_nm.join();
+	//without_normal();
+	with_normal();
+	wout_nm.join();
+	sum = sum + sum1 + sum2;
 	fout << "|total|" << sum << "|" << endl;
 	fout << "---------------" << endl;
+	t = clock() - t;// cout << "real time cost" << float(clock() - t) / CLOCKS_PER_SEC << endl;
+	cout << "sum time" << sum << endl;
+	std::cout << "program time: " << (float(t) / CLOCKS_PER_SEC) << "seconds\n";
 	return (0);
 }

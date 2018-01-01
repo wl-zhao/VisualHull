@@ -1,3 +1,5 @@
+
+
 # VisualHull
 
 ### 优化方案与步骤
@@ -69,11 +71,51 @@
 
 
 
-使用surfaceList保存所有的surface点，可以提高save without normal 和save with normal 的速度。
+使用surfaceList保存所有的surface点，理论上可以提高save without normal 和save with normal 的速度。但是实际上效果并不算太好。
 
 | save without normal | 2.132 |      |      |
 | ------------------- | ----- | ---- | ---- |
 | save with normal    |       |      |      |
 
 
+
+其他可能的优化思路：
+
+- totalInside可以进行优化，找到可以得到有效点云的最小取法。事实上我认为直接取角块就可以。waiting for testing
+
+- save with/without normal二者并无直接联系。事实上，主线程如下：
+
+  ```flow
+  st=>start: start
+  ld=>operation: load file
+  e=>end: end
+  gm=>operation: get model
+  gs=>operation: get surface
+  wn=>condition: save with normal?
+  sn=>operation: save with normal
+  swn=>operation: save without normal
+  sm=>operation: save mesh.ply
+  st->ld->gs->wn
+  wn(yes)->sn
+  wn(no)->swn->e
+  sn->sm->e
+
+  ```
+
+
+
+
+​	
+
+
+
+
+
+​	从图中可以看出，save with normal 与 save without normal 是并行的，可以用两个进程运行。
+
+-  可以考虑减少surface中的有效点，例如隔一个一取。
+
+-  计算法向时可以考虑简化计算，不要每个点都遍历一遍。
+
+-  有一步骤需要判断inner点or neibor点，这一步骤可以综合到get surface中完成？可能会消耗大量的存储空间。
 
