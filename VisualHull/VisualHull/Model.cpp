@@ -121,8 +121,6 @@ void Model::loadImage(const char* pDir, const char* pPrefix, const char* pSuffix
 
 void Model::getModel()
 {
-	//int prejectionCount = m_projectionList.size();
-
 	////*遍历空间中的所有点，判断该点是否位于visualhull内部
 	//for (int indexX = 0; indexX < m_corrX.m_resolution; indexX++)
 	//	for (int indexY = 0; indexY < m_corrY.m_resolution; indexY++)
@@ -166,23 +164,61 @@ void Model::getModel()
 
 void Model::getSurface()
 {
-	// 邻域：上、下、左、右、前、后。
-	//int dx[6] = { -1, 0, 0, 0, 0, 1 };
-	//int dy[6] = { 0, 1, -1, 0, 0, 0 };
-	//int dz[6] = { 0, 0, 0, 1, -1, 0 };
 
-	// lambda表达式，用于判断某个点是否在Voxel的范围内
-	//auto outOfRange = [&](int indexX, int indexY, int indexZ) {
-	//	return indexX < 0 || indexY < 0 || indexZ < 0
-	//		|| indexX >= m_corrX.m_resolution
-	//		|| indexY >= m_corrY.m_resolution
-	//		|| indexZ >= m_corrZ.m_resolution;
-	//};
+	//for (int indexX = 0; indexX < m_corrX.m_resolution; indexX++)
+	//	for (int indexY = 0; indexY < m_corrY.m_resolution; indexY++)
+	//		for (int indexZ = 0; indexZ < m_corrZ.m_resolution; indexZ++)
+	//		{
+	//			Point p(indexX, indexY, indexZ);
+	//			insideHull(p);
+	//			if (voxel(p))
+	//			{
+	//				bool ans = false;
+	//				for (int i = 0; i < 6; i++)
+	//				{
+	//					Point _p = p + dp[i];
+	//					if (!visited(_p) && !outOfRange(indexX + dx[i], indexY + dy[i], indexZ + dz[i]))
+	//					{
+	//						insideHull(_p);
+	//					}
+	//					ans = ans || outOfRange(_p)
+	//						|| !voxel(_p);
+	//				}
+	//				setSurface(p, ans);
+	//				if (ans)
+	//				{
+	//					//cout << p.x << " " << p.y << " " << p.z << endl;
+	//					BFS(p);
+	//					surfacePoints.push_back(p);
+	//					return;
+	//				}
+	//			}
+	//		}
 
-	for (int indexX = 0; indexX < m_corrX.m_resolution; indexX++)
-		for (int indexY = 0; indexY < m_corrY.m_resolution; indexY++)
-			for (int indexZ = 0; indexZ < m_corrZ.m_resolution; indexZ++)
+	int midx = m_corrX.m_resolution / 2;
+	int midy = m_corrY.m_resolution / 2;
+	int midz = m_corrZ.m_resolution / 2;
+
+	int indexX, indexY, indexZ;
+	int countx = 0, county = 0, countz = 0;
+	int sign[3] = { 1, 1, 1 };
+
+	int Mx = 4 * (m_corrX.m_resolution / 4) + 7;
+	int My = 4 * (m_corrY.m_resolution / 4) + 7;
+	int Mz = 4 * (m_corrZ.m_resolution / 4) + 7;
+
+	while (countx < Mx)
+	{
+		indexX = (midx + sign[0] * (countx / 2) *(countx / 2)) % Mx;
+		indexX = (indexX < 0) ? indexX + Mx : indexX;
+		while (county < My)
+		{
+			indexY = (midy + sign[1] * (county / 2) * (county / 2)) % My;
+			indexY = (indexY < 0) ? indexY + My : indexY;
+			while (countz < Mz)
 			{
+				indexZ = (midz + sign[2] * (countz / 2) * (countz / 2)) % Mz;
+				indexZ = (indexZ < 0) ? indexZ + Mz : indexZ;
 				Point p(indexX, indexY, indexZ);
 				insideHull(p);
 				if (voxel(p))
@@ -206,7 +242,16 @@ void Model::getSurface()
 						return;
 					}
 				}
+				sign[2] *= -1;
+				countz += 1;
 			}
+			sign[1] *= -1;
+			county += 1;
+		}
+		sign[0] *= -1;
+		countx += 1;
+	}
+
 }
 
 //use BFS to find all the surface points
@@ -245,86 +290,6 @@ void Model::BFS(Point p)
 			surfacePoints.push_back(p);
 	}
 }
-
-//void Model::DFS(int indexX, int indexY, int indexZ)
-//{
-//	int dx[18] = { -1, 0, 0, 0, 0, 1 ,1, 1, -1, -1, 0, 0, 0, 0, 1, 1, -1, -1 };
-//	int dy[18] = { 0, 1, -1, 0, 0, 0 ,1, -1, 1, -1, 1, -1, 1,-1, 0, 0, 0, 0 };
-//	int dz[18] = { 0, 0, 0, 1, -1, 0 ,0, 0, 0, 0, 1, 1, -1, -1, 1, -1, 1,-1 };
-//	//std::cout<<"DFS ing..."<<std::endl;
-//	std::queue<Point> s;
-//	Point p(indexX, indexY, indexZ);
-//	s.push(p);
-//	cout << " Point(" << p.x << ", " << p.y << ", " << p.z << ") has been pushed" << endl;
-//	enqueued[p.x][p.y][p.z] = true;
-//	std::vector<Point> buffer;
-//	int ct = 0;
-//	while (!s.empty())
-//	{
-//		ct++;
-//		Point temp = s.front(); s.pop();
-//		//std::cout<<s.size()<<std::endl;
-//		bool ans = false;
-//		//for (int i = 0; i < 6; i++)
-//		//{
-//		//	if (!m_status2[temp.x + dx[i]][temp.y + dy[i]][temp.z + dz[i]])
-//		//	{
-//		//		updateVoxel(Point(temp.x + dx[i],temp.y + dy[i],temp.z + dz[i]));
-//		//		m_status2[temp.x + dx[i]][temp.y + dy[i]][temp.z + dz[i]]=true;
-//		//	}
-//		//	ans = ans || myOutOfRange(temp.x + dx[i], temp.y + dy[i], temp.z + dz[i])
-//		//		|| !m_voxel[temp.x+ dx[i]][temp.y + dy[i]][temp.z + dz[i]];
-//		//}
-//		//m_surface[temp.x][temp.y][temp.z]=ans;
-//		int count = 0;
-//		buffer.clear();
-//		//surfacePoint.push_back(temp);
-//		for (int i = 0; i<18; i++)
-//		{
-//			if (!outOfRange(temp.x + dx[i], temp.y + dy[i], temp.z + dz[i]))
-//			{
-//				if (!visited[temp.x + dx[i]][temp.y + dy[i]][temp.z + dz[i]])
-//				{
-//					insideHull(temp.x + dx[i], temp.y + dy[i], temp.z + dz[i]);
-//					visited[temp.x + dx[i]][temp.y + dy[i]][temp.z + dz[i]] = true;
-//				}
-//
-//				if (m_voxel[temp.x + dx[i]][temp.y + dy[i]][temp.z + dz[i]])//inner
-//				{
-//					if (!enqueued[temp.x + dx[i]][temp.y + dy[i]][temp.z + dz[i]])
-//					{
-//						enqueued[temp.x + dx[i]][temp.y + dy[i]][temp.z + dz[i]] = true;
-//						p = Point(temp.x + dx[i], temp.y + dy[i], temp.z + dz[i]);
-//						s.push(p);
-//						cout << " Point(" << p.x << ", " << p.y << ", " << p.z << ") has been pushed" << endl;
-//					}
-//				}
-//			}
-//			if (i<6)
-//				ans = ans || outOfRange(temp.x + dx[i], temp.y + dy[i], temp.z + dz[i])
-//				|| !m_voxel[temp.x + dx[i]][temp.y + dy[i]][temp.z + dz[i]];
-//			if (i == 6)
-//			{
-//				m_surface[temp.x][temp.y][temp.z] = ans;
-//				//surfacePoint.push_back(temp);
-//				if (!ans)
-//				{
-//					break;
-//					//cout << "buffer count" << buffer.size()<<endl;
-//					////surfacePoint.push_back(temp);
-//					//for (int j = 0; j<buffer.size(); j++)
-//					//{
-//					//	m_status[buffer[j].x][buffer[j].y][buffer[j].z] = true;
-//					//	//s.push(buffer[j]);
-//					//}
-//				}
-//				else
-//					break;
-//			}
-//		}
-//	}
-//	cout << "ct : " << ct << endl;
-//}
 
 Eigen::Vector3f Model::getNormal(int indX, int indY, int indZ)
 {
@@ -415,7 +380,7 @@ bool Model::totalInside(const Point & p)
 		return false;
 
 	Point _p;
-	for (int i = 0; i < 26; i++)
+	for (int i = 6; i < 13; i++)
 	{
 		_p = dp[i] + p;
 		if (!insideHull(_p))
@@ -424,3 +389,8 @@ bool Model::totalInside(const Point & p)
 	return true;
 }
 
+ofstream & operator<<(ofstream & os, Point & p)
+{
+	os << p.x << " " << p.y << " " << p.z << endl;
+	return os;
+}

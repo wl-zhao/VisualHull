@@ -46,14 +46,13 @@ int main(int argc, char** argv)
 	last = clock();
 
 	// 得到Voxel模型
-	model.getModel();
-	std::cout << "get model done\n";
-
-	last = clock() - last;
-	std::cout << "time: " << (float(last) / CLOCKS_PER_SEC) << "seconds\n";
-	fout << "|get model|" << (float(last) / CLOCKS_PER_SEC) << "|" << endl;
-	sum += (float(last) / CLOCKS_PER_SEC);
-	last = clock();
+	//model.getModel();
+	//std::cout << "get model done\n";
+	//last = clock() - last;
+	//std::cout << "time: " << (float(last) / CLOCKS_PER_SEC) << "seconds\n";
+	//fout << "|get model|" << (float(last) / CLOCKS_PER_SEC) << "|" << endl;
+	//sum += (float(last) / CLOCKS_PER_SEC);
+	//last = clock();
 
 	// 获得Voxel模型的表面
 	model.getSurface();
@@ -102,14 +101,11 @@ int main(int argc, char** argv)
 		sum2 += (float(la) / CLOCKS_PER_SEC);
 	};
 
+	thread with_nm(with_normal);
 	thread wout_nm(without_normal);
-	//thread with_nm(with_normal);
-
-	//wout_nm.join();
-	//with_nm.join();
-	//without_normal();
-	with_normal();
+	with_nm.join();
 	wout_nm.join();
+
 	sum = sum + sum1 + sum2;
 	fout << "|total|" << sum << "|" << endl;
 	fout << "---------------" << endl;

@@ -386,3 +386,340 @@ join
 |save mesh.ply|6.508|
 |total|16.942|
 ---------------
+----------------
+multi
+|步骤|耗时|
+|-------|------|
+|load file|0.613|
+|get model|0.003|
+|get surface|1.322|
+|save without normal|3.24|
+|save with normal|6.742|
+|save mesh.ply|6.434|
+|total|16.938|
+---------------
+----------------
+multi
+|步骤|耗时|
+|-------|------|
+|load file|0.581|
+|get model|0.002|
+|get surface|1.283|
+|save without normal|3.128|
+|save with normal|6.248|
+|save mesh.ply|6.341|
+|total|16.866|
+---------------
+----------------
+monothread
+|步骤|耗时|
+|-------|------|
+|load file|0.594|
+|get model|0.002|
+|get surface|1.294|
+|save without normal|3.126|
+|save with normal|6.403|
+|save mesh.ply|6.463|
+|save without normal|2.304|
+|total|18.89|
+---------------
+----------------
+mono
+|步骤|耗时|
+|-------|------|
+|load file|0.56|
+|get model|0.002|
+|get surface|1.293|
+|save with normal|5.484|
+|save mesh.ply|6.498|
+|save without normal|2.297|
+|total|14.855|
+---------------
+----------------
+mono
+|步骤|耗时|
+|-------|------|
+|load file|0.539|
+|get model|0.002|
+|get surface|1.282|
+|save with normal|5.427|
+|save mesh.ply|6.469|
+|save without normal|2.277|
+|total|14.823|
+---------------
+----------------
+multi
+|步骤|耗时|
+|-------|------|
+|load file|0.604|
+|get model|0.001|
+|get surface|1.315|
+|save without normal|2.351|
+|save with normal|5.341|
+|save mesh.ply|6.372|
+|total|14.92|
+---------------
+----------------
+mono
+|步骤|耗时|
+|-------|------|
+|load file|0.546|
+|get model|0.002|
+|get surface|1.265|
+|save with normal|5.334|
+|save mesh.ply|6.453|
+|save without normal|2.403|
+|total|14.813|
+---------------
+----------------
+multi
+|步骤|耗时|
+|-------|------|
+|load file|0.613|
+|get model|0.007|
+|get surface|1.294|
+|save without normal|3.114|
+|save with normal|6.304|
+|save mesh.ply|6.427|
+|total|16.914|
+---------------
+----------------
+modify
+|步骤|耗时|
+|-------|------|
+|load file|0.556|
+|get model|0.003|
+|get surface|1.203|
+|save without normal|3.052|
+|save with normal|6.027|
+|save mesh.ply|6.299|
+|total|16.762|
+---------------
+----------------
+corner
+|步骤|耗时|
+|-------|------|
+|load file|0.558|
+|get model|0.002|
+|get surface|1.222|
+|save without normal|3.124|
+|save with normal|6.202|
+|save mesh.ply|6.823|
+|total|16.782|
+---------------
+----------------
+d
+|步骤|耗时|
+|-------|------|
+|load file|0.553|
+|get model|0.002|
+|get surface|1.227|
+|save without normal|3.056|
+|save with normal|6.138|
+|save mesh.ply|6.211|
+|total|16.782|
+---------------
+----------------
+test
+|步骤|耗时|
+|-------|------|
+|load file|0.559|
+|get model|0.002|
+|get surface|1.229|
+|save without normal|3.108|
+|save with normal|6.208|
+|save mesh.ply|6.307|
+|total|16.79|
+---------------
+----------------
+fixed
+|步骤|耗时|
+|-------|------|
+|load file|0.571|
+|get model|0.005|
+|get surface|0.498|
+|save without normal|3.088|
+|save with normal|6.283|
+|save mesh.ply|6.393|
+|total|16.074|
+---------------
+----------------
+d
+|步骤|耗时|
+|-------|------|
+|load file|0.608|
+|get model|0.001|
+|get surface|0.538|
+|save without normal|3.17|
+|save with normal|6.972|
+|save mesh.ply|7.158|
+|total|17.147|
+---------------
+----------------
+double
+|步骤|耗时|
+|-------|------|
+|load file|0.575|
+|get model|0.002|
+|get surface|2.9|
+|save without normal|0.009|
+|save with normal|0.159|
+|save mesh.ply|0.941|
+|total|3.477|
+---------------
+----------------
+double
+|步骤|耗时|
+|-------|------|
+|load file|0.631|
+|get model|0.001|
+|get surface|0.656|
+|save without normal|3.049|
+|save with normal|6.72|
+|save mesh.ply|6.754|
+|total|16.288|
+---------------
+----------------
+ssl
+|步骤|耗时|
+|-------|------|
+|load file|0.627|
+|get model|0.006|
+|get surface|0.559|
+|save without normal|3.22|
+|save with normal|7.008|
+|save mesh.ply|6.747|
+|total|17.192|
+---------------
+----------------
+ssl
+|步骤|耗时|
+|-------|------|
+|load file|0.626|
+|get model|0.002|
+|get surface|0.599|
+|save without normal|3.367|
+|save with normal|7.05|
+|save mesh.ply|6.979|
+|total|17.227|
+---------------
+----------------
+ssl
+|步骤|耗时|
+|-------|------|
+|load file|0.595|
+|get model|0.002|
+|get surface|0.609|
+|save without normal|3.137|
+|save with normal|6.802|
+|save mesh.ply|6.985|
+|total|16.206|
+---------------
+----------------
+ssl
+|步骤|耗时|
+|-------|------|
+|load file|0.598|
+|get model|0.002|
+|get surface|0.609|
+|save without normal|3.31|
+|save with normal|7.479|
+|save mesh.ply|7.017|
+|total|18.209|
+---------------
+----------------
+sss
+|步骤|耗时|
+|-------|------|
+|load file|0.614|
+|get model|0.002|
+|get surface|0.533|
+|save without normal|3.252|
+|save with normal|7.182|
+|save mesh.ply|6.82|
+|total|17.149|
+---------------
+----------------
+sss
+|步骤|耗时|
+|-------|------|
+|load file|0.596|
+|get model|0.002|
+|get surface|0.542|
+|save without normal|3.176|
+|save with normal|6.824|
+|save mesh.ply|6.73|
+|total|16.14|
+---------------
+----------------
+original
+|步骤|耗时|
+|-------|------|
+|load file|0.612|
+|get model|0.002|
+|get surface|0.56|
+|save without normal|3.172|
+|save with normal|6.876|
+|save mesh.ply|6.955|
+|total|16.174|
+---------------
+----------------
+origin
+|步骤|耗时|
+|-------|------|
+|load file|0.613|
+|get model|0.002|
+|get surface|1.301|
+|save without normal|3.128|
+|save with normal|6.822|
+|save mesh.ply|6.78|
+|total|16.916|
+---------------
+----------------
+sss
+|步骤|耗时|
+|-------|------|
+|load file|0.604|
+|get model|0.004|
+|get surface|0.529|
+|save without normal|3.286|
+|save with normal|6.982|
+|save mesh.ply|6.82|
+|total|16.137|
+---------------
+----------------
+sll
+|步骤|耗时|
+|-------|------|
+|load file|0.656|
+|get model|0.002|
+|get surface|0.579|
+|save without normal|3.275|
+|save with normal|6.976|
+|save mesh.ply|6.961|
+|total|16.237|
+---------------
+----------------
+lss
+|步骤|耗时|
+|-------|------|
+|load file|0.62|
+|get model|0.001|
+|get surface|0.515|
+|save without normal|3.149|
+|save with normal|6.884|
+|save mesh.ply|6.857|
+|total|16.136|
+---------------
+----------------
+lls
+|步骤|耗时|
+|-------|------|
+|load file|0.592|
+|get model|0.005|
+|get surface|0.517|
+|save without normal|3.137|
+|save with normal|6.819|
+|save mesh.ply|6.865|
+|total|16.114|
+---------------
