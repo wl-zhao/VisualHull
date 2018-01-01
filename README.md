@@ -65,5 +65,11 @@
 
 
 
+使用surfaceList保存所有的surface点，可以提高save without normal 和save with normal 的速度。
+
+| save without normal | 2.132 |      |      |
+| ------------------- | ----- | ---- | ---- |
+| save with normal    |       |      |      |
+
 
 

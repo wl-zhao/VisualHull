@@ -186,19 +186,16 @@ void Model::getSurface()
 		for (int indexY = 0; indexY < m_corrY.m_resolution; indexY++)
 			for (int indexZ = 0; indexZ < m_corrZ.m_resolution; indexZ++)
 			{
-				//m_voxel[indexX][indexY][indexZ].visited = true;
 				visitcount++;
 				Point p(indexX, indexY, indexZ);
 				insideHull(p);
 				if (voxel(p))
 				{
-					//	m_surface[indexX][indexY][indexZ] = false;
 					bool ans = false;
 					for (int i = 0; i < 6; i++)
 					{
 						Point _p = p + dp[i];
-						if (!visited(_p))
-							//&&!outOfRange(indexX + dx[i], indexY + dy[i], indexZ + dz[i]))
+						if (!visited(_p) && !outOfRange(indexX + dx[i], indexY + dy[i], indexZ + dz[i]))
 						{
 							insideHull(_p);
 							setVisited(_p);
@@ -207,13 +204,10 @@ void Model::getSurface()
 						ans = ans || outOfRange(_p)
 							|| !voxel(_p);
 					}
-					//m_surface[indexX][indexY][indexZ] = ans;
 					setSurface(p, ans);
 					if (ans)
 					{
-						cout << indexX << " " << indexY << " " << indexZ << " " << endl;
 						BFS(p);
-						cout << "visitcount" << visitcount << endl;
 						surfacePoints.push_back(p);
 						return;
 					}
@@ -225,11 +219,9 @@ void Model::getSurface()
 void Model::BFS(Point p)
 {
 
-	//m_enqueued[p.x][p.y][p.z] = true;
 	setEnqueued(p);
 	queue<Point> s;
 	s.push(p);
-	cout << " Point(" << p.x << ", " << p.y << ", " << p.z << ") has been pushed" << endl;
 
 	while (!s.empty())
 	{
@@ -351,13 +343,6 @@ void Model::BFS(Point p)
 
 Eigen::Vector3f Model::getNormal(int indX, int indY, int indZ)
 {
-	//auto outOfRange = [&](int indexX, int indexY, int indexZ) {
-	//	return indexX < 0 || indexY < 0 || indexZ < 0
-	//		|| indexX >= m_corrX.m_resolution
-	//		|| indexY >= m_corrY.m_resolution
-	//		|| indexZ >= m_corrZ.m_resolution;
-	//};
-
 	std::vector<Eigen::Vector3f> neiborList;
 	std::vector<Eigen::Vector3f> innerList;
 
@@ -386,11 +371,15 @@ Eigen::Vector3f Model::getNormal(int indX, int indY, int indZ)
 
 	Eigen::Vector3f point(m_corrX.index2coor(indX), m_corrY.index2coor(indY), m_corrZ.index2coor(indZ));
 
+	//PCA
 	Eigen::MatrixXf matA(3, neiborList.size());
 	for (int i = 0; i < neiborList.size(); i++)
 		matA.col(i) = neiborList[i] - point;
+	//计算特征值
 	Eigen::SelfAdjointEigenSolver<Eigen::Matrix3f> eigenSolver(matA * matA.transpose());
 	Eigen::Vector3f eigenValues = eigenSolver.eigenvalues();
+
+	//选取最小的一个
 	int indexEigen = 0;
 	if (abs(eigenValues[1]) < abs(eigenValues[indexEigen]))
 		indexEigen = 1;
@@ -418,6 +407,8 @@ bool Model::outOfRange(int indexX, int indexY, int indexZ)
 
 bool Model::insideHull(int indexX, int indexY, int indexZ)
 {
+	if (m_visited[indexX][indexY][indexZ])
+		return m_voxel[indexX][indexY][indexZ];
 	int prejectionCount = m_projectionList.size();
 	double coorX, coorY, coorZ;
 	for (int i = 0; i < prejectionCount; i++)
@@ -429,6 +420,22 @@ bool Model::insideHull(int indexX, int indexY, int indexZ)
 			m_voxel[indexX][indexY][indexZ] &&
 			m_projectionList[i].checkRange(coorX, coorY, coorZ);
 	}
+	m_visited[indexX][indexY][indexZ] = true;
 	return m_voxel[indexX][indexY][indexZ];
+}
+
+bool Model::totalInside(const Point & p)
+{
+	if (!insideHull(p))
+		return false;
+
+	Point _p;
+	for (int i = 0; i < 6; i++)
+	{
+		_p = dp[i] + p;
+		if (!insideHull(_p))
+			return false;
+	}
+	return true;
 }
 

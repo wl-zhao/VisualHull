@@ -98,6 +98,9 @@ private:
 	bool insideHull(int indexX, int indexY, int indexZ);
 	bool insideHull(const Point &p) 
 	{ return insideHull(p.x, p.y, p.z); }
+	bool totalInside(const Point &p);
+
+
 	void BFS(Point p);
 
 	bool voxel(const Point &p) 
