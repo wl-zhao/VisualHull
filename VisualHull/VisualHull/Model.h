@@ -7,6 +7,7 @@
 #include <Eigen/Eigen>
 #include <limits>
 #include <queue>
+#include <list>
 #include <iostream>
 #include <fstream>
 using namespace std;
@@ -14,13 +15,12 @@ using namespace std;
 class Point
 {
 public:
-	Point(int indexX, int indexY, int indexZ):x(indexX), y(indexY), z(indexZ){}
-
+	Point(int indexX = 0, int indexY = 0, int indexZ = 0):x(indexX), y(indexY), z(indexZ){}
+	const Point& operator+(const Point &p)
+	{ return Point(x+p.x, y+p.y, z+p.z); }
 	int x, y, z;
 };
 
-typedef std::vector<std::vector<bool>> Pixel;
-typedef std::vector<Pixel> Voxel;
 
 // 用于判断投影是否在visual hull内部
 struct Projection
@@ -70,6 +70,8 @@ struct CoordinateInfo
 class Model
 {
 public:
+	typedef std::vector<std::vector<bool>> Pixel;
+	typedef std::vector<Pixel> Voxel;
 
 	Model(int resX = 100, int resY = 100, int resZ = 100);
 	~Model();
@@ -84,9 +86,38 @@ public:
 
 
 private:
+	const int dx[6] = { -1, 0, 0, 0, 0, 1 };
+	const int dy[6] = { 0, 1, -1, 0, 0, 0 };
+	const int dz[6] = { 0, 0, 0, 1, -1, 0 };
+	Point dp[6];
+
+
 	bool outOfRange(int indexX, int indexY, int indexZ);
+	bool outOfRange(const Point &p) 
+	{ return outOfRange(p.x, p.y, p.z); }
 	bool insideHull(int indexX, int indexY, int indexZ);
+	bool insideHull(const Point &p) 
+	{ return insideHull(p.x, p.y, p.z); }
 	void BFS(Point p);
+
+	bool voxel(const Point &p) 
+	{ return m_voxel[p.x][p.y][p.z]; }
+	bool surface(const Point &p) 
+	{ return m_surface[p.x][p.y][p.z]; }
+	bool visited(const Point &p) 
+	{ return m_visited[p.x][p.y][p.z]; }
+	bool enqueued(const Point &p) 
+	{ return m_enqueued[p.x][p.y][p.z]; }
+
+
+	void setVoxel(const Point &p, bool v = true) 
+	{ m_voxel[p.x][p.y][p.z] = v; }
+	void setSurface(const Point &p, bool v = true) 
+	{ m_surface[p.x][p.y][p.z] = v; }	
+	void setVisited(const Point &p, bool v = true) 
+	{ m_visited[p.x][p.y][p.z] = v; }
+	void setEnqueued(const Point &p, bool v = true) 
+	{ m_enqueued[p.x][p.y][p.z] = v; }
 
 	CoordinateInfo m_corrX;
 	CoordinateInfo m_corrY;
@@ -95,9 +126,10 @@ private:
 	int m_neiborSize;
 
 	std::vector<Projection> m_projectionList;
+	list<Point> surfacePoints;
 
 	Voxel m_voxel;
 	Voxel m_surface;
-	Voxel visited;//是否访问过
-	Voxel enqueued;//是否入队过
+	Voxel m_visited;//是否访问过
+	Voxel m_enqueued;//是否入队过
 };

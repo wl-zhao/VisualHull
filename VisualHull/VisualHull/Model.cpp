@@ -11,10 +11,13 @@ Model::Model(int resX, int resY, int resZ)
 		m_neiborSize = 1;
 	m_voxel = Voxel(m_corrX.m_resolution, Pixel(m_corrY.m_resolution, vector<bool>(m_corrZ.m_resolution, true)));
 	m_surface = Voxel(m_corrX.m_resolution, Pixel(m_corrY.m_resolution, vector<bool>(m_corrZ.m_resolution, false)));
-	enqueued = Voxel(m_corrX.m_resolution, Pixel(m_corrY.m_resolution, vector<bool>(m_corrZ.m_resolution, false)));
-	visited = Voxel(m_corrX.m_resolution, Pixel(m_corrY.m_resolution, vector<bool>(m_corrZ.m_resolution, false)));
+	m_enqueued = Voxel(m_corrX.m_resolution, Pixel(m_corrY.m_resolution, vector<bool>(m_corrZ.m_resolution, false)));
+	m_visited = Voxel(m_corrX.m_resolution, Pixel(m_corrY.m_resolution, vector<bool>(m_corrZ.m_resolution, false)));
 	//m_status 表示是否入队，这里用enqueue
 	//m_status2 表示是否访问，这里用visited
+	for (int i = 0; i < 6; i++)
+		dp[i] = Point(dx[i], dy[i], dz[i]);
+	surfacePoints.clear();
 }
 
 Model::~Model()
@@ -25,17 +28,24 @@ Model::~Model()
 void Model::saveModel(const char* pFileName)
 {
 	std::ofstream fout(pFileName);
-
-	for (int indexX = 0; indexX < m_corrX.m_resolution; indexX++)
-		for (int indexY = 0; indexY < m_corrY.m_resolution; indexY++)
-			for (int indexZ = 0; indexZ < m_corrZ.m_resolution; indexZ++)
-				if (m_surface[indexX][indexY][indexZ])
-				{
-					double coorX = m_corrX.index2coor(indexX);
-					double coorY = m_corrY.index2coor(indexY);
-					double coorZ = m_corrZ.index2coor(indexZ);
-					fout << coorX << ' ' << coorY << ' ' << coorZ << std::endl;
-				}
+	double coorX, coorY, coorZ;
+	//for (int indexX = 0; indexX < m_corrX.m_resolution; indexX++)
+	//	for (int indexY = 0; indexY < m_corrY.m_resolution; indexY++)
+	//		for (int indexZ = 0; indexZ < m_corrZ.m_resolution; indexZ++)
+	//			if (m_surface[indexX][indexY][indexZ])
+	//			{
+	//				double coorX = m_corrX.index2coor(indexX);
+	//				double coorY = m_corrY.index2coor(indexY);
+	//				double coorZ = m_corrZ.index2coor(indexZ);
+	//				fout << coorX << ' ' << coorY << ' ' << coorZ << std::endl;
+	//			}
+	for (auto &p : surfacePoints)
+	{
+		coorX = m_corrX.index2coor(p.x);
+		coorY = m_corrY.index2coor(p.y);
+		coorZ = m_corrZ.index2coor(p.z);
+		fout << coorX << ' ' << coorY << ' ' << coorZ << std::endl;
+	}
 }
 
 void Model::saveModelWithNormal(const char* pFileName)
@@ -45,6 +55,7 @@ void Model::saveModelWithNormal(const char* pFileName)
 	double midX = m_corrX.index2coor(m_corrX.m_resolution / 2);
 	double midY = m_corrY.index2coor(m_corrY.m_resolution / 2);
 	double midZ = m_corrZ.index2coor(m_corrZ.m_resolution / 2);
+	double coorX, coorY, coorZ;
 
 	for (int indexX = 0; indexX < m_corrX.m_resolution; indexX++)
 		for (int indexY = 0; indexY < m_corrY.m_resolution; indexY++)
@@ -59,6 +70,16 @@ void Model::saveModelWithNormal(const char* pFileName)
 					Eigen::Vector3f nor = getNormal(indexX, indexY, indexZ);
 					fout << nor(0) << ' ' << nor(1) << ' ' << nor(2) << std::endl;
 				}
+	//for (auto & p : surfacePoints)
+	//{
+	//	coorX = m_corrX.index2coor(p.x);
+	//	coorY = m_corrY.index2coor(p.y);
+	//	coorZ = m_corrZ.index2coor(p.z);
+	//	fout << coorX << ' ' << coorY << ' ' << coorZ << std::endl;
+
+	//	Eigen::Vector3f nor = getNormal(p.x, p.y, p.z);
+	//	fout << nor(0) << ' ' << nor(1) << ' ' << nor(2) << std::endl;
+	//}
 }
 
 void Model::loadMatrix(const char* pFileName)
@@ -148,9 +169,9 @@ void Model::getModel()
 void Model::getSurface()
 {
 	// 邻域：上、下、左、右、前、后。
-	int dx[6] = { -1, 0, 0, 0, 0, 1 };
-	int dy[6] = { 0, 1, -1, 0, 0, 0 };
-	int dz[6] = { 0, 0, 0, 1, -1, 0 };
+	//int dx[6] = { -1, 0, 0, 0, 0, 1 };
+	//int dy[6] = { 0, 1, -1, 0, 0, 0 };
+	//int dz[6] = { 0, 0, 0, 1, -1, 0 };
 
 	// lambda表达式，用于判断某个点是否在Voxel的范围内
 	//auto outOfRange = [&](int indexX, int indexY, int indexZ) {
@@ -167,29 +188,33 @@ void Model::getSurface()
 			{
 				//m_voxel[indexX][indexY][indexZ].visited = true;
 				visitcount++;
-				insideHull(indexX, indexY, indexZ);
-				if (m_voxel[indexX][indexY][indexZ])
+				Point p(indexX, indexY, indexZ);
+				insideHull(p);
+				if (voxel(p))
 				{
 					//	m_surface[indexX][indexY][indexZ] = false;
 					bool ans = false;
 					for (int i = 0; i < 6; i++)
 					{
-						if (!visited[indexX + dx[i]][indexY + dy[i]][indexZ + dz[i]])
+						Point _p = p + dp[i];
+						if (!visited(_p))
 							//&&!outOfRange(indexX + dx[i], indexY + dy[i], indexZ + dz[i]))
 						{
-							insideHull(indexX + dx[i], indexY + dy[i], indexZ + dz[i]);
-							visited[indexX + dx[i]][indexY + dy[i]][indexZ + dz[i]] = true;
+							insideHull(_p);
+							setVisited(_p);
 							visitcount++;
 						}
-						ans = ans || outOfRange(indexX + dx[i], indexY + dy[i], indexZ + dz[i])
-							|| !m_voxel[indexX + dx[i]][indexY + dy[i]][indexZ + dz[i]];
+						ans = ans || outOfRange(_p)
+							|| !voxel(_p);
 					}
-					m_surface[indexX][indexY][indexZ] = ans;
+					//m_surface[indexX][indexY][indexZ] = ans;
+					setSurface(p, ans);
 					if (ans)
 					{
 						cout << indexX << " " << indexY << " " << indexZ << " " << endl;
-						BFS(Point(indexX, indexY, indexZ));
+						BFS(p);
 						cout << "visitcount" << visitcount << endl;
+						surfacePoints.push_back(p);
 						return;
 					}
 				}
@@ -200,53 +225,47 @@ void Model::getSurface()
 void Model::BFS(Point p)
 {
 
-	int dx[18] = { -1, 0, 0, 0, 0, 1 ,1, 1, -1, -1, 0, 0, 0, 0, 1, 1, -1, -1 };
-	int dy[18] = { 0, 1, -1, 0, 0, 0 ,1, -1, 1, -1, 1, -1, 1,-1, 0, 0, 0, 0 };
-	int dz[18] = { 0, 0, 0, 1, -1, 0 ,0, 0, 0, 0, 1, 1, -1, -1, 1, -1, 1,-1 };
-
-	//m_voxel[indexX][indexY][indexZ].setIndex(indexX, indexY, indexZ);
-	enqueued[p.x][p.y][p.z] = true;
+	//m_enqueued[p.x][p.y][p.z] = true;
+	setEnqueued(p);
 	queue<Point> s;
 	s.push(p);
 	cout << " Point(" << p.x << ", " << p.y << ", " << p.z << ") has been pushed" << endl;
 
 	while (!s.empty())
 	{
-		Point temp = s.front(); s.pop();
+		p = s.front(); s.pop();
+		Point temp = p;
 		bool ans = false;
 		int count = 0;
-		for (int i = 0; i < 7; i++)
+		for (int i = 0; i < 6; i++)
 		{
-			if (!outOfRange(temp.x + dx[i], temp.y + dy[i], temp.z + dz[i]))
+			Point _p = dp[i] + p;
+			if (!outOfRange(_p))
 			{
-				if (!visited[temp.x + dx[i]][temp.y + dy[i]][temp.z + dz[i]])
+				if (!visited(_p))
 				{
-					insideHull(temp.x + dx[i], temp.y + dy[i], temp.z + dz[i]);
-					visited[temp.x + dx[i]][temp.y + dy[i]][temp.z + dz[i]] = true;
+					insideHull(_p);
+					setVisited(_p);
+					//m_visited[temp.x + dx[i]][temp.y + dy[i]][temp.z + dz[i]] = true;
 				}
-				if (m_voxel[temp.x + dx[i]][temp.y + dy[i]][temp.z + dz[i]])
+				if (voxel(_p))
 				{
-					if (!enqueued[temp.x + dx[i]][temp.y + dy[i]][temp.z + dz[i]])
+					if (!enqueued(_p))
 					{
-						enqueued[temp.x + dx[i]][temp.y + dy[i]][temp.z + dz[i]] = true;
-						p = (Point(temp.x + dx[i], temp.y + dy[i], temp.z + dz[i]));
-						s.push(p);
+						/*m_enqueued[temp.x + dx[i]][temp.y + dy[i]][temp.z + dz[i]] = true;*/
+						setEnqueued(_p);
+						s.push(_p);
 						//cout << " Point(" << p.x << ", " << p.y << ", " << p.z << ") has been pushed" << endl;
 					}
 				}
 			}
-			if (i < 6)
-				ans = ans || outOfRange(temp.x + dx[i], temp.y + dy[i], temp.z + dz[i]) ||
-				!m_voxel[temp.x + dx[i]][temp.y + dy[i]][temp.z + dz[i]];
-			if (i == 6)
-			{
-				m_surface[temp.x][temp.y][temp.z] = ans;
-				if (!ans)
-				{
-					break;
-				}
-			}
+			ans = ans || outOfRange(_p) ||
+				!voxel(_p);
 		}
+		//m_surface[temp.x][temp.y][temp.z] = ans;
+		setSurface(p, ans);
+		if (ans)
+			surfacePoints.push_back(p);
 	}
 }
 
@@ -332,12 +351,12 @@ void Model::BFS(Point p)
 
 Eigen::Vector3f Model::getNormal(int indX, int indY, int indZ)
 {
-	auto outOfRange = [&](int indexX, int indexY, int indexZ) {
-		return indexX < 0 || indexY < 0 || indexZ < 0
-			|| indexX >= m_corrX.m_resolution
-			|| indexY >= m_corrY.m_resolution
-			|| indexZ >= m_corrZ.m_resolution;
-	};
+	//auto outOfRange = [&](int indexX, int indexY, int indexZ) {
+	//	return indexX < 0 || indexY < 0 || indexZ < 0
+	//		|| indexX >= m_corrX.m_resolution
+	//		|| indexY >= m_corrY.m_resolution
+	//		|| indexZ >= m_corrZ.m_resolution;
+	//};
 
 	std::vector<Eigen::Vector3f> neiborList;
 	std::vector<Eigen::Vector3f> innerList;
@@ -356,7 +375,7 @@ Eigen::Vector3f Model::getNormal(int indX, int indY, int indZ)
 					float coorX = m_corrX.index2coor(neiborX);
 					float coorY = m_corrY.index2coor(neiborY);
 					float coorZ = m_corrZ.index2coor(neiborZ);
-					if (!visited[neiborX][neiborY][neiborZ])
+					if (!m_visited[neiborX][neiborY][neiborZ])
 						insideHull(neiborX, neiborY, neiborZ);
 					if (m_surface[neiborX][neiborY][neiborZ])
 						neiborList.push_back(Eigen::Vector3f(coorX, coorY, coorZ));
