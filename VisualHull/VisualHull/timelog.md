@@ -723,3 +723,113 @@ lls
 |save mesh.ply|6.865|
 |total|16.114|
 ---------------
+----------------
+no
+|步骤|耗时|
+|-------|------|
+|load file|0.644|
+|get surface|0.572|
+|save without normal|3.477|
+|save with normal|4.28|
+|save mesh.ply|6.794|
+|total|14.216|
+---------------
+----------------
+vector
+|步骤|耗时|
+|-------|------|
+|load file|0.557|
+|get surface|0.546|
+|save without normal|3.208|
+|save with normal|5.545|
+|save mesh.ply|6.295|
+|total|15.103|
+---------------
+----------------
+vector
+|步骤|耗时|
+|-------|------|
+|load file|0.587|
+|get surface|0.525|
+|save without normal|3.203|
+|save with normal|5.529|
+|save mesh.ply|6.161|
+|total|15.112|
+---------------
+----------------
+no
+|步骤|耗时|
+|-------|------|
+|load file|0.614|
+|get surface|0.554|
+|save without normal|3.431|
+|save with normal|4.208|
+|save mesh.ply|6.164|
+|total|14.168|
+---------------
+----------------
+has
+|步骤|耗时|
+|-------|------|
+|load file|0.62|
+|get surface|0.546|
+|save without normal|3.112|
+|save with normal|6.408|
+|save mesh.ply|6.509|
+|total|16.166|
+---------------
+----------------
+normal
+|步骤|耗时|
+|-------|------|
+|load file|0.591|
+|get surface|0.509|
+|save without normal|3.183|
+|save with normal|6.433|
+|save mesh.ply|6.531|
+|total|16.1|
+---------------
+----------------
+normal
+|步骤|耗时|
+|-------|------|
+|load file|0.557|
+|get surface|0.509|
+|save without normal|3.106|
+|save with normal|6.522|
+|save mesh.ply|6.579|
+|total|16.066|
+---------------
+----------------
+center
+|步骤|耗时|
+|-------|------|
+|load file|0.609|
+|get surface|0.518|
+|save without normal|3.274|
+|save with normal|6.069|
+|save mesh.ply|6.464|
+|total|16.127|
+---------------
+----------------
+center
+|步骤|耗时|
+|-------|------|
+|load file|0.623|
+|get surface|0.542|
+|save without normal|3.161|
+|save with normal|6.022|
+|save mesh.ply|6.482|
+|total|16.165|
+---------------
+----------------
+center
+|步骤|耗时|
+|-------|------|
+|load file|0.556|
+|get surface|0.521|
+|save without normal|3.169|
+|save with normal|5.918|
+|save mesh.ply|6.508|
+|total|15.077|
+---------------

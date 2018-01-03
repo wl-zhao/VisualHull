@@ -295,6 +295,8 @@ Eigen::Vector3f Model::getNormal(int indX, int indY, int indZ)
 {
 	std::vector<Eigen::Vector3f> neiborList;
 	std::vector<Eigen::Vector3f> innerList;
+	Eigen::Vector3f innerCenter = Eigen::Vector3f::Zero();
+	int count = 0;
 
 	for (int dX = -m_neiborSize; dX <= m_neiborSize; dX++)
 		for (int dY = -m_neiborSize; dY <= m_neiborSize; dY++)
@@ -315,7 +317,11 @@ Eigen::Vector3f Model::getNormal(int indX, int indY, int indZ)
 					if (m_surface[neiborX][neiborY][neiborZ])
 						neiborList.push_back(Eigen::Vector3f(coorX, coorY, coorZ));
 					else if (m_voxel[neiborX][neiborY][neiborZ])
-						innerList.push_back(Eigen::Vector3f(coorX, coorY, coorZ));
+					{
+						innerCenter = (count * innerCenter + Eigen::Vector3f(coorX, coorY, coorZ))/(count + 1);
+						count++;
+					}
+						//innerList.push_back(Eigen::Vector3f(coorX, coorY, coorZ));
 				}
 			}
 
@@ -337,10 +343,10 @@ Eigen::Vector3f Model::getNormal(int indX, int indY, int indZ)
 		indexEigen = 2;
 	Eigen::Vector3f normalVector = eigenSolver.eigenvectors().col(indexEigen);
 
-	Eigen::Vector3f innerCenter = Eigen::Vector3f::Zero();
-	for (auto const& vec : innerList)
-		innerCenter += vec;
-	innerCenter /= innerList.size();
+	//Eigen::Vector3f innerCenter = Eigen::Vector3f::Zero();
+	//for (auto const& vec : innerList)
+	//	innerCenter += vec;
+	//innerCenter /= innerList.size();
 
 	if (normalVector.dot(point - innerCenter) < 0)
 		normalVector *= -1;
