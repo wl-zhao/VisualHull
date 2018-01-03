@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <algorithm>
+#include <map>
 #include <opencv2/opencv.hpp>
 #include <Eigen/Eigen>
 #include <limits>
@@ -18,6 +19,11 @@ public:
 	Point(int indexX = 0, int indexY = 0, int indexZ = 0):x(indexX), y(indexY), z(indexZ){}
 	const Point& operator+(const Point &p)
 	{ return Point(x+p.x, y+p.y, z+p.z); }
+	friend bool operator<(const Point &p, const Point & q)
+	{
+		return p.x < q.x || p.y < q.y || p.z < q.z;
+	}
+
 	int x, y, z;
 	friend ofstream& operator<<(ofstream& os, Point& p);
 };
@@ -28,6 +34,7 @@ struct Projection
 {
 	Eigen::Matrix<float, 3, 4> m_projMat;
 	cv::Mat m_image;
+	cv::Mat m_image_color;
 	const uint m_threshold = 125;
 
 	bool outOfRange(int x, int max)
@@ -45,6 +52,16 @@ struct Projection
 			return false;
 		//判断是否为白色点，白色表示在VisualHull的内部
 		return m_image.at<uchar>((uint)(vec3[1] / vec3[2]), (uint)(vec3[0] / vec3[2])) > m_threshold;
+	}
+
+	cv::Vec3b getColor(double x, double y, double z)
+	{
+		cv::Vec3b ans;
+		Eigen::Vector3f vec3 = m_projMat * Eigen::Vector4f(x, y, z, 1);
+		int indX = vec3[1] / vec3[2];
+		int indY = vec3[0] / vec3[2];
+
+		return m_image_color.at<cv::Vec3b>((uint)(vec3[1] / vec3[2]), (uint)(vec3[0] / vec3[2]));
 	}
 };
 
@@ -79,10 +96,14 @@ public:
 
 	void saveModel(const char* pFileName);
 	void saveModelWithNormal(const char* pFileName);
+	void savePly(const char * pFileName);
+
 	void loadMatrix(const char* pFileName);
-	void loadImage(const char* pDir, const char* pPrefix, const char* pSuffix);
+	void loadImage(const char* pDir1,const char* pPrefix1, const char* pSuffix1, const char* pDir2, const char* pPrefix2, const char* pSuffix2);
 	void getModel();
 	void getSurface();
+	void getColor();
+
 	Eigen::Vector3f getNormal(int indX, int indY, int indZ);
 
 
@@ -100,6 +121,8 @@ private:
 	bool insideHull(int indexX, int indexY, int indexZ);
 	bool insideHull(const Point &p) 
 	{ return insideHull(p.x, p.y, p.z); }
+	void getColor(const Point &p);
+
 	bool totalInside(const Point &p);
 
 
@@ -132,9 +155,12 @@ private:
 
 	std::vector<Projection> m_projectionList;
 	vector<Point> surfacePoints;
+	map<Point, cv::Vec3b> m_colorMap;
+	map<Point, Eigen::Vector3f> m_normal;
 
 	Voxel m_voxel;
 	Voxel m_surface;
 	Voxel m_visited;//是否访问过
 	Voxel m_enqueued;//是否入队过
 };
+

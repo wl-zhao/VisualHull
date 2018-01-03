@@ -31,13 +31,13 @@ int main(int argc, char** argv)
 	fout << "|-------|------|" << endl;
 
 	// 分别设置xyz方向的Voxel分辨率
-	Model model(500, 500, 500);
+	Model model(300, 300, 300);
 
 	// 读取相机的内外参数
 	model.loadMatrix("../../calibParamsI.txt");
 
 	// 读取投影图片
-	model.loadImage("../../wd_segmented", "WD2_", "_00020_segmented.png");
+	model.loadImage("../../wd_segmented", "WD2_", "_00020_segmented.png", "../../wd_data","WD2_" ,"_00020.png" );
 
 	last = clock() - last;
 	std::cout << "time: " << (float(last) / CLOCKS_PER_SEC) << "seconds\n";
@@ -85,15 +85,25 @@ int main(int argc, char** argv)
 		clock_t la = clock();
 		model.saveModelWithNormal("../../WithNormal.xyz");
 		std::cout << "save with normal done\n";
+		fout << "|save with normal|" << (float(la) / CLOCKS_PER_SEC) << "|" << endl;
+		sum2 += (float(la) / CLOCKS_PER_SEC);
+		la = clock() - la;
+		std::cout << "time: " << (float(la) / CLOCKS_PER_SEC) << "seconds\n";
+
+		la = clock();
+		model.getColor();
+		model.savePly("../WithNormal.ply");
+		std::cout << "save with color done\n";
 
 		la = clock() - la;
 		std::cout << "time: " << (float(la) / CLOCKS_PER_SEC) << "seconds\n";
-		fout << "|save with normal|" << (float(la) / CLOCKS_PER_SEC) << "|" << endl;
+		fout << "|save with color|" << (float(la) / CLOCKS_PER_SEC) << "|" << endl;
 		sum2 += (float(la) / CLOCKS_PER_SEC);
 
 		//泊松重建算法
 		la = clock();
-		system("PoissonRecon.x64 --in ../../WithNormal.xyz --out ../../mesh.ply");
+		//system("PoissonRecon.x64 --in ../../WithNormal.xyz --out ../../mesh.ply");
+		system("PoissonRecon --in ../../WithNormal.ply --out ../../mesh.ply");
 		std::cout << "save mesh.ply done\n";
 		la = clock() - la;
 		std::cout << "time: " << (float(la) / CLOCKS_PER_SEC) << "seconds\n";
@@ -114,3 +124,28 @@ int main(int argc, char** argv)
 	std::cout << "program time: " << (float(t) / CLOCKS_PER_SEC) << "seconds\n";
 	return (0);
 }
+
+//void cvtest()
+//{
+//	cv::Vec3f data = cv::Vec3b(255, 255, 255);
+//	for (int i = 0; i < 10000; i++)
+//	{
+//		//cout << data;
+//		data += cv::Vec3b(1, 1, 1);
+//	}
+//	cout << data;
+//	//cv::Mat mat = cv::imread("test.png");
+//	//for (int i = 0; i < mat.size().height; i++)
+//	//{
+//	//	for (int j = 0; j < mat.size().width; j++)
+//	//	{
+//	//		data = mat.at<cv::Vec3b>(i, j);
+//	//		if (data != cv::Vec3b(255, 255, 255))
+//	//		cout << "pos: i = " << i << "j = " << j << endl << "data = " << data << endl;
+//	//	}
+//	//}
+//}
+//int main()
+//{
+//	cvtest();
+//}

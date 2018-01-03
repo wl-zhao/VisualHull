@@ -888,3 +888,50 @@ nol
 |save mesh.ply|9.023|
 |total|46.285|
 ---------------
+----------------
+no
+|步骤|耗时|
+|-------|------|
+|load file|0.829|
+|get surface|1.48|
+----------------
+no
+|步骤|耗时|
+|-------|------|
+|load file|0.562|
+|get surface|0.458|
+|save without normal|3.083|
+|save with normal|5.702|
+|save mesh.ply|0.177|
+|total|9.02|
+---------------
+----------------
+no
+|步骤|耗时|
+|-------|------|
+|load file|0.637|
+|get surface|0.536|
+|save without normal|3.133|
+|save with normal|6.025|
+|save mesh.ply|7.219|
+|total|17.173|
+---------------
+----------------
+��
+|步骤|耗时|
+|-------|------|
+|load file|0.574|
+|get surface|0.506|
+|save without normal|3.274|
+|save with normal|6.697|
+|save mesh.ply|7.902|
+|total|17.08|
+---------------
+----------------
+with
+|步骤|耗时|
+|-------|------|
+|load file|0.556|
+|get surface|0.462|
+|save without normal|3.08|
+|save with normal|6.046|
