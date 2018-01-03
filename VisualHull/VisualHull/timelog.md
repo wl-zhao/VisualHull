@@ -833,3 +833,58 @@ center
 |save mesh.ply|6.508|
 |total|15.077|
 ---------------
+----------------
+normal
+|步骤|耗时|
+|-------|------|
+|load file|0.635|
+|get surface|0.621|
+|save without normal|3.801|
+|save with normal|8.077|
+|save mesh.ply|8.101|
+|total|20.256|
+---------------
+----------------
+k
+|步骤|耗时|
+|-------|------|
+|load file|0.632|
+|get surface|0.613|
+|save without normal|3.668|
+|save with normal|7.73|
+|save mesh.ply|7.901|
+|total|18.245|
+---------------
+----------------
+no
+|步骤|耗时|
+|-------|------|
+|load file|0.612|
+|get surface|0.541|
+|save without normal|3.284|
+|save with normal|6.403|
+|save mesh.ply|6.788|
+|total|16.153|
+---------------
+----------------
+nol
+|步骤|耗时|
+|-------|------|
+|load file|0.559|
+|get surface|0.507|
+|save without normal|3.181|
+|save with normal|5.754|
+|save mesh.ply|6.33|
+|total|15.066|
+---------------
+----------------
+500
+|步骤|耗时|
+|-------|------|
+|load file|0.756|
+|get surface|1.529|
+|save without normal|9.271|
+|save with normal|26.766|
+|save mesh.ply|9.023|
+|total|46.285|
+---------------

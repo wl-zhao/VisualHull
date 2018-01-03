@@ -31,7 +31,7 @@ int main(int argc, char** argv)
 	fout << "|-------|------|" << endl;
 
 	// 分别设置xyz方向的Voxel分辨率
-	Model model(300, 300, 300);
+	Model model(500, 500, 500);
 
 	// 读取相机的内外参数
 	model.loadMatrix("../../calibParamsI.txt");
