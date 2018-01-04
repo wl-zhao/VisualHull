@@ -23,7 +23,14 @@ public:
 	{
 		return p.x < q.x || p.y < q.y || p.z < q.z;
 	}
-
+	bool operator==(const Point &p)
+	{
+		return x == p.x && y == p.y &&z == p.z;
+	}
+	void show()
+	{
+		cout << x << " " << y << " " << z << endl;
+	}
 	int x, y, z;
 	friend ofstream& operator<<(ofstream& os, Point& p);
 };
@@ -155,8 +162,8 @@ private:
 
 	std::vector<Projection> m_projectionList;
 	vector<Point> surfacePoints;
-	map<Point, cv::Vec3b> m_colorMap;
-	map<Point, Eigen::Vector3f> m_normal;
+	vector<cv::Vec3b> m_colorList;
+	vector<Eigen::Vector3f> m_normal;
 
 	Voxel m_voxel;
 	Voxel m_surface;

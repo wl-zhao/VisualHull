@@ -93,12 +93,18 @@
   gs=>operation: get surface
   wn=>condition: save with normal?
   sn=>operation: save with normal
+  wc=>condition: want color?
+  gc=>operation: get color
+  sc=>operation: save with_color.ply
+  smc=>operation: save mesh_color.ply
   swn=>operation: save without normal
   sm=>operation: save mesh.ply
   st->ld->gs->wn
   wn(yes)->sn
   wn(no)->swn->e
-  sn->sm->e
+  sn->wc
+  wc(yes)->sc->smc
+  wc(no)->sm
 
   ```
 
@@ -118,4 +124,21 @@
 -  有一步骤需要判断inner点or neibor点，这一步骤可以综合到get surface中完成？可能会消耗大量的存储空间。
 -  可采用类似哈希的线性试探法或平方试探法确定第一个点的位置。经过测试发现，如果给定了第一个点的位置，get surface 可达0.5s的量级！可见一个快速确定初始位置的算法十分有用。
 -  get normal 中，原来获取内部点中心的算法有一些无用功。我使用递推的方法在一个循环中就求出了中心点。这样可以减少总的时间0.5s左右。把握好一个原则，由于总的表面点数量较多，在大循环中即便是一些微不足道的优化，乘上总数之后，优化效果依旧可观。
+
+
+
+
+我似乎在数电之前在大作业上花费了太多的时间。现在先将最后的bug解决，然后先放一放。后续的任务有：
+
+- 优化颜色信息。目前颜色出问题可能是由于surface point 在某些投影上处于外部，下面对每一个surface point 的innnerlist获取颜色信息，可能会更加准确
+- 优化速度。发现Point变量似乎不需要，可以使用cv::Vec3f或者Eigen::Vector3f来代替。为了减少代码的改动量，可以直接从其中继承，或者typedef一下应该就可以了
+- 如果有时间和精力，学习cuda编程。十分具有挑战性。
+
+
+
+
+终于把颜色信息解决了。之前颜色有问题是因为Map出问题，貌似每次添加一个元素就有可能发生变化。非常迷。这次全部使用vector来解决的，效果还不错。
+
+目前可以做到20s左右生成带颜色的图片。
+
 
