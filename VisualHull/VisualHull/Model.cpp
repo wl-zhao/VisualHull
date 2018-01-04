@@ -135,8 +135,10 @@ void Model::savePly(const char* pFileName)
 
 		Eigen::Vector3f nor = m_normal[p];
 		fout << nor(0) << ' ' << nor(1) << ' ' << nor(2) << ' ';
-		cv::Vec3b color = m_colorMap[p];
-		fout << color(0) << ' ' << color(1) << ' ' << color(2) << std::endl;
+		//cv::Vec3b color = m_colorMap[p];
+		                    Eigen::Vector3f color = Eigen::Vector3f(0.0, 255.0, 0.0);
+		                    fout << color(0) << ' ' << color(1) << ' ' << color(2) << std::endl;
+		//fout << 0 << ' ' << color(1) << ' ' << color(2) << std::endl;
 	}
 	fout.close();
 }
@@ -185,7 +187,7 @@ void Model::loadImage(const char* pDir1, const char* pPrefix1, const char* pSuff
 	{
 		//std::cout << fileName + std::to_string(i) + pSuffix << std::endl;
 		m_projectionList[i].m_image = cv::imread(fileName1 + std::to_string(i) + pSuffix1, CV_8UC1);
-		m_projectionList[i].m_image_color = cv::imread(fileName2 + std::to_string(i) + pSuffix1);
+		m_projectionList[i].m_image_color = cv::imread(fileName2 + std::to_string(i) + pSuffix2);
 	}
 }
 
