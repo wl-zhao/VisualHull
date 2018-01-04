@@ -1090,3 +1090,27 @@ bug
 |save mesh.ply|4.007|
 |total|14.487|
 ---------------
+----------------
+try
+|步骤|耗时|
+|-------|------|
+|load file|1.967|
+|get surface|0.408|
+|save without normal|1.796|
+|save with normal|7.548|
+|save with color|0.001|
+|save mesh.ply|6.112|
+|total|16.375|
+---------------
+----------------
+1331
+|步骤|耗时|
+|-------|------|
+|load file|2.024|
+|get surface|0.449|
+|save without normal|1.832|
+|save with normal|6.143|
+|save with color|0.001|
+|save mesh.ply|6.282|
+|total|15.473|
+---------------

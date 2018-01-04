@@ -27,23 +27,23 @@ void Model::saveModel(const char* pFileName)
 {
 	std::ofstream fout(pFileName);
 	double coorX, coorY, coorZ;
-	//for (int indexX = 0; indexX < m_corrX.m_resolution; indexX++)
-	//	for (int indexY = 0; indexY < m_corrY.m_resolution; indexY++)
-	//		for (int indexZ = 0; indexZ < m_corrZ.m_resolution; indexZ++)
-	//			if (m_surface[indexX][indexY][indexZ])
-	//			{
-	//				double coorX = m_corrX.index2coor(indexX);
-	//				double coorY = m_corrY.index2coor(indexY);
-	//				double coorZ = m_corrZ.index2coor(indexZ);
-	//				fout << coorX << ' ' << coorY << ' ' << coorZ << std::endl;
-	//			}
-	for (auto &p : surfacePoints)
-	{
-		coorX = m_corrX.index2coor(p.x);
-		coorY = m_corrY.index2coor(p.y);
-		coorZ = m_corrZ.index2coor(p.z);
-		fout << coorX << ' ' << coorY << ' ' << coorZ << std::endl;
-	}
+	for (int indexX = 0; indexX < m_corrX.m_resolution; indexX++)
+		for (int indexY = 0; indexY < m_corrY.m_resolution; indexY++)
+			for (int indexZ = 0; indexZ < m_corrZ.m_resolution; indexZ++)
+				if (m_surface[indexX][indexY][indexZ])
+				{
+					double coorX = m_corrX.index2coor(indexX);
+					double coorY = m_corrY.index2coor(indexY);
+					double coorZ = m_corrZ.index2coor(indexZ);
+					fout << coorX << ' ' << coorY << ' ' << coorZ << std::endl;
+				}
+	//for (auto &p : surfacePoints)
+	//{
+	//	coorX = m_corrX.index2coor(p.x);
+	//	coorY = m_corrY.index2coor(p.y);
+	//	coorZ = m_corrZ.index2coor(p.z);
+	//	fout << coorX << ' ' << coorY << ' ' << coorZ << std::endl;
+	//}
 }
 
 void Model::saveModelWithNormal(const char* pFileName)
