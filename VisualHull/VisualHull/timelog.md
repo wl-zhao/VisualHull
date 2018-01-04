@@ -1114,3 +1114,318 @@ try
 |save mesh.ply|6.282|
 |total|15.473|
 ---------------
+----------------
+no
+|步骤|耗时|
+|-------|------|
+|load file|2.271|
+|get surface|1.008|
+|save without normal|1.919|
+|save with normal|8.618|
+|save with color|0.001|
+|save mesh.ply|6.171|
+|total|18.279|
+---------------
+----------------
+color
+|步骤|耗时|
+|-------|------|
+|load file|2.03|
+|get surface|1.013|
+|save without normal|1.887|
+|save with normal|7.882|
+|save with color|2.249|
+|save mesh.ply|9.91|
+|total|22.043|
+---------------
+----------------
+color
+|步骤|耗时|
+|-------|------|
+|load file|2.058|
+|get surface|1.022|
+|save without normal|1.796|
+|save with normal|14.277|
+|save with color|2.257|
+|save mesh.ply|10.134|
+|total|30.08|
+---------------
+----------------
+color
+|步骤|耗时|
+|-------|------|
+|load file|2.099|
+|get surface|1.026|
+|save without normal|1.876|
+|save with normal|9.153|
+|save with color|3.871|
+|save mesh.ply|12.794|
+|total|28.125|
+---------------
+----------------
+color
+|步骤|耗时|
+|-------|------|
+|load file|1.9|
+|get surface|0.977|
+|save without normal|1.832|
+|save with normal|7.48|
+|save with color|3.736|
+|save mesh.ply|13.123|
+|total|26.877|
+---------------
+----------------
+RGBBGR
+|步骤|耗时|
+|-------|------|
+|load file|1.995|
+|get surface|1.011|
+|save without normal|1.833|
+|save with normal|18.701|
+|save with color|3.655|
+----------------
+color
+|步骤|耗时|
+|-------|------|
+|load file|2.061|
+|get surface|1.008|
+|save without normal|1.85|
+|save with normal|5.34|
+|save with color|3.767|
+----------------
+d
+|步骤|耗时|
+|-------|------|
+|load file|1.942|
+|get surface|0.972|
+|save without normal|1.796|
+|save with normal|4.693|
+----------------
+d
+|步骤|耗时|
+|-------|------|
+|load file|2.08|
+|get surface|1.499|
+|save without normal|1.958|
+|save with normal|6.102|
+----------------
+color
+|步骤|耗时|
+|-------|------|
+|load file|1.951|
+|get surface|0.979|
+|save without normal|1.856|
+|save with normal|5.509|
+|save with color|3.976|
+|save mesh.ply|12.742|
+|total|23.93|
+---------------
+----------------
+color
+|步骤|耗时|
+|-------|------|
+|load file|2.504|
+|get surface|1.441|
+|save without normal|2.181|
+|save with normal|7.075|
+|save with color|5.928|
+|save mesh.ply|14.887|
+|total|31.945|
+---------------
+----------------
+color
+|步骤|耗时|
+|-------|------|
+|load file|2.499|
+|get surface|1.484|
+|save without normal|2.291|
+|save with normal|11.339|
+|save with color|6.037|
+|save mesh.ply|15.095|
+|total|37.983|
+---------------
+----------------
+colr
+|步骤|耗时|
+|-------|------|
+|load file|2.182|
+|get surface|1.438|
+|save without normal|2.15|
+|save with normal|7.594|
+|save with color|4.443|
+|save mesh.ply|12.956|
+|total|28.62|
+---------------
+----------------
+color
+|步骤|耗时|
+|-------|------|
+|load file|2.154|
+|get surface|1.07|
+|save without normal|1.925|
+|save with normal|6.94|
+|save with color|4.087|
+|save mesh.ply|13.197|
+|total|27.224|
+---------------
+----------------
+d
+|步骤|耗时|
+|-------|------|
+|load file|2.495|
+|get surface|1.475|
+|save without normal|2.3|
+|save with normal|5.894|
+|save with color|6.048|
+|save mesh.ply|20.999|
+|total|36.97|
+---------------
+----------------
+color
+|步骤|耗时|
+|-------|------|
+|load file|2.485|
+|get surface|1.489|
+|save without normal|2.236|
+|save with normal|6.56|
+|save with color|5.802|
+|save mesh.ply|14.982|
+|total|30.974|
+---------------
+----------------
+vector
+|步骤|耗时|
+|-------|------|
+|load file|2.491|
+|get surface|0.59|
+|save without normal|2.147|
+|save with normal|6.788|
+|save with color|5.984|
+|save mesh.ply|15.135|
+|total|31.081|
+---------------
+----------------
+k
+|步骤|耗时|
+|-------|------|
+|load file|2.426|
+|get surface|0.586|
+|save without normal|2.111|
+|save with normal|4.716|
+|save with color|5.613|
+|save mesh.ply|7.868|
+|total|21.012|
+---------------
+----------------
+k
+|步骤|耗时|
+|-------|------|
+|load file|2.44|
+|get surface|0.595|
+|save without normal|2.146|
+|save with normal|4.723|
+|save with color|5.764|
+|save mesh.ply|14.883|
+|total|28.035|
+---------------
+----------------
+i
+|步骤|耗时|
+|-------|------|
+|load file|2.458|
+|get surface|0.589|
+|save without normal|2.132|
+|save with normal|67.642|
+|save with color|5.73|
+|save mesh.ply|15.558|
+|total|92.047|
+---------------
+----------------
+color
+|步骤|耗时|
+|-------|------|
+|load file|2.48|
+|get surface|0.581|
+|save without normal|2.132|
+|save with normal|5.667|
+|save with color|2.876|
+----------------
+color
+|步骤|耗时|
+|-------|------|
+|load file|2.138|
+|get surface|0.438|
+|save without normal|1.872|
+|save with normal|4.875|
+|save with color|2.468|
+|save mesh.ply|10.185|
+|total|19.576|
+---------------
+----------------
+d
+|步骤|耗时|
+|-------|------|
+|load file|2.5|
+|get surface|0.591|
+|save without normal|2.154|
+|save with normal|15.59|
+|save with color|5.687|
+|save mesh.ply|14.862|
+|total|39.091|
+---------------
+----------------
+h
+|步骤|耗时|
+|-------|------|
+|load file|2.493|
+|get surface|0.587|
+|save without normal|2.194|
+|save with normal|5.369|
+|save with color|3.451|
+|save mesh.ply|12.324|
+|total|25.08|
+---------------
+----------------
+lk
+|步骤|耗时|
+|-------|------|
+|load file|2.483|
+|get surface|0.581|
+|save without normal|2.116|
+|save with normal|5.441|
+----------------
+j
+|步骤|耗时|
+|-------|------|
+|load file|2.756|
+|get surface|18.213|
+|save without normal|348.65|
+|save with normal|25.062|
+----------------
+h
+|步骤|耗时|
+|-------|------|
+|load file|2.702|
+|get surface|17.35|
+|save without normal|3.258|
+----------------
+no
+|步骤|耗时|
+|-------|------|
+|load file|2.678|
+----------------
+k
+|步骤|耗时|
+|-------|------|
+|load file|2.542|
+|get surface|0.586|
+|save without normal|3.705|
+|save with normal|4.904|
+----------------
+k
+|步骤|耗时|
+|-------|------|
+|load file|2.707|
+|get surface|0.922|
+|save without normal|4.082|
+|save with normal|6.333|

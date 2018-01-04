@@ -91,8 +91,8 @@ int main(int argc, char** argv)
 		std::cout << "time: " << (float(la) / CLOCKS_PER_SEC) << "seconds\n";
 
 		la = clock();
-		//model.getColor();
-		//model.savePly("../../WithNormal.ply");
+		model.getColor();
+		model.savePly("../../WithNormal.ply");
 		std::cout << "save with color done\n";
 
 		la = clock() - la;
@@ -104,7 +104,7 @@ int main(int argc, char** argv)
 		la = clock();
 		system("PoissonRecon.x64 --in ../../WithNormal.xyz --out ../../mesh.ply");
 		//system("PoissonRecon_color --in ../../WithNormal.ply --out ../../mesh.ply");
-		//system("PoissonRecon_color --in ../../WithNormal.ply --out ../mesh.ply --color 16");
+		system("PoissonRecon_color --in ../../WithNormal.ply --out ../../mesh_color.ply --color 16");
 		std::cout << "save mesh.ply done\n";
 		la = clock() - la;
 		std::cout << "time: " << (float(la) / CLOCKS_PER_SEC) << "seconds\n";
