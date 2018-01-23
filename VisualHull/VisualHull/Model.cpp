@@ -6,7 +6,7 @@ Model::Model(int resX, int resY, int resZ)
 	, m_corrZ(resZ, 15, 30)
 {
 	if (resX > 100)
-		m_neiborSize = resX / 100;
+		m_neiborSize = resX * 2 / 100;
 	else
 		m_neiborSize = 1;
 	m_voxel = Voxel(m_corrX.m_resolution, Pixel(m_corrY.m_resolution, vector<bool>(m_corrZ.m_resolution, true)));
@@ -42,9 +42,9 @@ void Model::saveModel(const char* pFileName)//without normal
 	//			}
 	for (auto &p : surfacePoints)
 	{
-		coorX = m_corrX.index2coor(p.x);
-		coorY = m_corrY.index2coor(p.y);
-		coorZ = m_corrZ.index2coor(p.z);
+		coorX = m_corrX.index2coor(p[0]);
+		coorY = m_corrY.index2coor(p[1]);
+		coorZ = m_corrZ.index2coor(p[2]);
 		fout << coorX << ' ' << coorY << ' ' << coorZ << std::endl;
 	}
 }
@@ -52,7 +52,6 @@ void Model::saveModel(const char* pFileName)//without normal
 void Model::saveModelWithNormal(const char* pFileName)
 {
 	std::ofstream fout(pFileName);
-	double coorX, coorY, coorZ;
 
 	//for (int indexX = 0; indexX < m_corrX.m_resolution; indexX++)
 	//	for (int indexY = 0; indexY < m_corrY.m_resolution; indexY++)
@@ -64,16 +63,18 @@ void Model::saveModelWithNormal(const char* pFileName)
 	//				double coorZ = m_corrZ.index2coor(indexZ);
 	//				fout << coorX << ' ' << coorY << ' ' << coorZ << ' ';
 	//				Eigen::Vector3f nor = getNormal(indexX, indexY, indexZ);
+	//				m_normal.push_back(nor);
 	//				fout << nor(0) << ' ' << nor(1) << ' ' << nor(2) << std::endl;
 	//			}
 
 	Eigen::Vector3f nor;
 	int indX, indY, indZ; 
+	double coorX, coorY, coorZ;
 	for (int i = 0; i< surfacePoints.size();i++)
 	{
-		indX = surfacePoints[i].x;
-		indY = surfacePoints[i].y;
-		indZ = surfacePoints[i].z;
+		indX = surfacePoints[i][0];
+		indY = surfacePoints[i][1];
+		indZ = surfacePoints[i][2];
 		coorX = m_corrX.index2coor(indX);
 		coorY = m_corrY.index2coor(indY);
 		coorZ = m_corrZ.index2coor(indZ);
@@ -113,9 +114,9 @@ void Model::savePly(const char* pFileName)
 	for (int i = 0 ; i < surfacePoints.size() ; i++)
 	{
 		p = surfacePoints[i];
-		coorx = m_corrX.index2coor(p.x);
-		coory = m_corrY.index2coor(p.y);
-		coorz = m_corrZ.index2coor(p.z);
+		coorx = m_corrX.index2coor(p[0]);
+		coory = m_corrY.index2coor(p[1]);
+		coorz = m_corrZ.index2coor(p[2]);
 		fout << coorx << ' ' << coory << ' ' << coorz << ' ';
 		nor = m_normal[i];
 		fout << nor(0) << ' ' << nor(1) << ' ' << nor(2) << ' ';
@@ -409,16 +410,22 @@ bool Model::insideHull(int indexX, int indexY, int indexZ)
 void Model::getColor(const Point & p)
 {
 	int prejectionCount = m_projectionList.size();
+	int count = 0;
 	double coorX, coorY, coorZ;
 	cv::Vec3f color = cv::Vec3f(0, 0, 0);
 	for (int i = 0; i < prejectionCount; i++)
 	{
-		coorX = m_corrX.index2coor(p.x);
-		coorY = m_corrY.index2coor(p.y);
-		coorZ = m_corrZ.index2coor(p.z);
-		color += m_projectionList[i].getColor(coorX, coorY, coorZ);
+		coorX = m_corrX.index2coor(p[0]);
+		coorY = m_corrY.index2coor(p[1]);
+		coorZ = m_corrZ.index2coor(p[2]);
+
+		if (m_projectionList[i].checkRange(coorX, coorY, coorZ))
+		{
+			color += m_projectionList[i].getColor(coorX, coorY, coorZ);
+			count++;
+		}
 	}
-	color /= prejectionCount;
+	color /= count;
 	m_colorList.push_back(color);
 }
 

@@ -11,30 +11,31 @@
 #include <list>
 #include <iostream>
 #include <fstream>
+#include <unordered_map>
+
 using namespace std;
 
-class Point
-{
-public:
-	Point(int indexX = 0, int indexY = 0, int indexZ = 0):x(indexX), y(indexY), z(indexZ){}
-	const Point& operator+(const Point &p)
-	{ return Point(x+p.x, y+p.y, z+p.z); }
-	friend bool operator<(const Point &p, const Point & q)
-	{
-		return p.x < q.x || p.y < q.y || p.z < q.z;
-	}
-	bool operator==(const Point &p)
-	{
-		return x == p.x && y == p.y &&z == p.z;
-	}
-	void show()
-	{
-		cout << x << " " << y << " " << z << endl;
-	}
-	int x, y, z;
-	friend ofstream& operator<<(ofstream& os, Point& p);
-};
-
+//class Point
+//{
+//public:
+//	Point(int indexX = 0, int indexY = 0, int indexZ = 0):x(indexX), y(indexY), z(indexZ){}
+//	const Point& operator+(const Point &p)
+//	{ return Point(x+p.x, y+p.y, z+p.z); }
+//	friend bool operator<(const Point &p, const Point & q)
+//	{
+//		return p.x < q.x || p.y < q.y || p.z < q.z;
+//	}
+//	bool operator==(const Point &p)
+//	{
+//		return x == p.x && y == p.y &&z == p.z;
+//	}
+//	void show()
+//	{
+//		cout << x << " " << y << " " << z << endl;
+//	}
+//	int x, y, z;
+//};
+typedef cv::Vec3i Point;
 
 // 用于判断投影是否在visual hull内部
 struct Projection
@@ -124,10 +125,10 @@ private:
 
 	bool outOfRange(int indexX, int indexY, int indexZ);
 	bool outOfRange(const Point &p) 
-	{ return outOfRange(p.x, p.y, p.z); }
+	{ return outOfRange(p[0], p[1], p[2]); }
 	bool insideHull(int indexX, int indexY, int indexZ);
 	bool insideHull(const Point &p) 
-	{ return insideHull(p.x, p.y, p.z); }
+	{ return insideHull(p[0], p[1], p[2]); }
 	void getColor(const Point &p);
 
 	bool totalInside(const Point &p);
@@ -136,23 +137,23 @@ private:
 	void BFS(Point p);
 
 	bool voxel(const Point &p) 
-	{ return m_voxel[p.x][p.y][p.z]; }
+	{ return m_voxel[p[0]][p[1]][p[2]]; }
 	bool surface(const Point &p) 
-	{ return m_surface[p.x][p.y][p.z]; }
+	{ return m_surface[p[0]][p[1]][p[2]]; }
 	bool visited(const Point &p) 
-	{ return m_visited[p.x][p.y][p.z]; }
+	{ return m_visited[p[0]][p[1]][p[2]]; }
 	bool enqueued(const Point &p) 
-	{ return m_enqueued[p.x][p.y][p.z]; }
+	{ return m_enqueued[p[0]][p[1]][p[2]]; }
 
 
 	void setVoxel(const Point &p, bool v = true) 
-	{ m_voxel[p.x][p.y][p.z] = v; }
+	{ m_voxel[p[0]][p[1]][p[2]] = v; }
 	void setSurface(const Point &p, bool v = true) 
-	{ m_surface[p.x][p.y][p.z] = v; }	
+	{ m_surface[p[0]][p[1]][p[2]] = v; }
 	void setVisited(const Point &p, bool v = true) 
-	{ m_visited[p.x][p.y][p.z] = v; }
+	{ m_visited[p[0]][p[1]][p[2]] = v; }
 	void setEnqueued(const Point &p, bool v = true) 
-	{ m_enqueued[p.x][p.y][p.z] = v; }
+	{ m_enqueued[p[0]][p[1]][p[2]] = v; }
 
 	CoordinateInfo m_corrX;
 	CoordinateInfo m_corrY;

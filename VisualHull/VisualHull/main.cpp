@@ -130,8 +130,8 @@ int main(int argc, char** argv)
 			thread with_color(reconstruction_withcolor);
 			with_color.join();
 		}
-		thread wout_color(reconstruction);
-		wout_color.join();
+		//thread wout_color(reconstruction);
+		//wout_color.join();
 	};
 
 	thread with_nm(with_normal);
