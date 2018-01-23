@@ -18,7 +18,7 @@ Model::Model(int resX, int resY, int resZ)
 
 	surfacePoints.clear();
 	m_normal.clear();
-	m_colorList.clear();
+	//m_colorList.clear();
 }
 
 Model::~Model()
@@ -30,59 +30,60 @@ void Model::saveModel(const char* pFileName)//without normal
 {
 	std::ofstream fout(pFileName);
 	double coorX, coorY, coorZ;
-	//for (int indexX = 0; indexX < m_corrX.m_resolution; indexX++)
-	//	for (int indexY = 0; indexY < m_corrY.m_resolution; indexY++)
-	//		for (int indexZ = 0; indexZ < m_corrZ.m_resolution; indexZ++)
-	//			if (m_surface[indexX][indexY][indexZ])
-	//			{
-	//				double coorX = m_corrX.index2coor(indexX);
-	//				double coorY = m_corrY.index2coor(indexY);
-	//				double coorZ = m_corrZ.index2coor(indexZ);
-	//				fout << coorX << ' ' << coorY << ' ' << coorZ << std::endl;
-	//			}
-	for (auto &p : surfacePoints)
-	{
-		coorX = m_corrX.index2coor(p[0]);
-		coorY = m_corrY.index2coor(p[1]);
-		coorZ = m_corrZ.index2coor(p[2]);
-		fout << coorX << ' ' << coorY << ' ' << coorZ << std::endl;
-	}
+	for (int indexX = 0; indexX < m_corrX.m_resolution; indexX++)
+		for (int indexY = 0; indexY < m_corrY.m_resolution; indexY++)
+			for (int indexZ = 0; indexZ < m_corrZ.m_resolution; indexZ++)
+				if (m_surface[indexX][indexY][indexZ])
+				{
+					double coorX = m_corrX.index2coor(indexX);
+					double coorY = m_corrY.index2coor(indexY);
+					double coorZ = m_corrZ.index2coor(indexZ);
+					fout << coorX << ' ' << coorY << ' ' << coorZ << std::endl;
+				}
+	//for (auto &p : surfacePoints)
+	//{
+	//	coorX = m_corrX.index2coor(p[0]);
+	//	coorY = m_corrY.index2coor(p[1]);
+	//	coorZ = m_corrZ.index2coor(p[2]);
+	//	fout << coorX << ' ' << coorY << ' ' << coorZ << std::endl;
+	//}
 }
 
 void Model::saveModelWithNormal(const char* pFileName)
 {
 	std::ofstream fout(pFileName);
 
-	//for (int indexX = 0; indexX < m_corrX.m_resolution; indexX++)
-	//	for (int indexY = 0; indexY < m_corrY.m_resolution; indexY++)
-	//		for (int indexZ = 0; indexZ < m_corrZ.m_resolution; indexZ++)
-	//			if (m_surface[indexX][indexY][indexZ])
-	//			{
-	//				double coorX = m_corrX.index2coor(indexX);
-	//				double coorY = m_corrY.index2coor(indexY);
-	//				double coorZ = m_corrZ.index2coor(indexZ);
-	//				fout << coorX << ' ' << coorY << ' ' << coorZ << ' ';
-	//				Eigen::Vector3f nor = getNormal(indexX, indexY, indexZ);
-	//				m_normal.push_back(nor);
-	//				fout << nor(0) << ' ' << nor(1) << ' ' << nor(2) << std::endl;
-	//			}
+	for (int indexX = 0; indexX < m_corrX.m_resolution; indexX++)
+		for (int indexY = 0; indexY < m_corrY.m_resolution; indexY++)
+			for (int indexZ = 0; indexZ < m_corrZ.m_resolution; indexZ++)
+				if (m_surface[indexX][indexY][indexZ])
+				{
+					double coorX = m_corrX.index2coor(indexX);
+					double coorY = m_corrY.index2coor(indexY);
+					double coorZ = m_corrZ.index2coor(indexZ);
+					fout << coorX << ' ' << coorY << ' ' << coorZ << ' ';
+					Eigen::Vector3f nor = getNormal(indexX, indexY, indexZ);
+					//m_normal[Point(indexX, indexY, indexZ)] = nor;
+					fout << nor(0) << ' ' << nor(1) << ' ' << nor(2) << std::endl;
+				}
 
-	Eigen::Vector3f nor;
-	int indX, indY, indZ; 
-	double coorX, coorY, coorZ;
-	for (int i = 0; i< surfacePoints.size();i++)
-	{
-		indX = surfacePoints[i][0];
-		indY = surfacePoints[i][1];
-		indZ = surfacePoints[i][2];
-		coorX = m_corrX.index2coor(indX);
-		coorY = m_corrY.index2coor(indY);
-		coorZ = m_corrZ.index2coor(indZ);
-		fout << coorX << ' ' << coorY << ' ' << coorZ << endl;
-		nor = getNormal(indX, indY, indZ);
-		fout << nor(0) << ' ' << nor(1) << ' ' << nor(2) << std::endl;
-		m_normal.push_back(nor);
-	}
+	//Eigen::Vector3f nor;
+	//int indX, indY, indZ; 
+	//double coorX, coorY, coorZ;
+	//for (int i = 0; i< surfacePoints.size(); i++)
+	//{
+	//	indX = surfacePoints[i][0];
+	//	indY = surfacePoints[i][1];
+	//	indZ = surfacePoints[i][2];
+	//	coorX = m_corrX.index2coor(indX);
+	//	coorY = m_corrY.index2coor(indY);
+	//	coorZ = m_corrZ.index2coor(indZ);
+	//	fout << coorX << ' ' << coorY << ' ' << coorZ << endl;
+	//	nor = getNormal(indX, indY, indZ);
+	//	fout << nor(0) << ' ' << nor(1) << ' ' << nor(2) << std::endl;
+	//	//m_normal.push_back(nor);
+	//	m_normal[surfacePoints[i]] = nor;
+	//}
 }
 
 void Model::savePly(const char* pFileName)
@@ -118,9 +119,10 @@ void Model::savePly(const char* pFileName)
 		coory = m_corrY.index2coor(p[1]);
 		coorz = m_corrZ.index2coor(p[2]);
 		fout << coorx << ' ' << coory << ' ' << coorz << ' ';
-		nor = m_normal[i];
+		nor = m_normal[p];
 		fout << nor(0) << ' ' << nor(1) << ' ' << nor(2) << ' ';
-		color = m_colorList[i];
+		//color = m_colorList[i];
+		color = m_colorMap[p];
 		fout << color(2) << ' ' << color(1) << ' ' << color(0) << std::endl;
 
 	}
@@ -353,7 +355,6 @@ Eigen::Vector3f Model::getNormal(int indX, int indY, int indZ)
 
 	Eigen::Vector3f point(m_corrX.index2coor(indX), m_corrY.index2coor(indY), m_corrZ.index2coor(indZ));
 
-	//PCA
 	Eigen::MatrixXf matA(3, neiborList.size());
 	for (int i = 0; i < neiborList.size(); i++)
 		matA.col(i) = neiborList[i] - point;
@@ -369,10 +370,6 @@ Eigen::Vector3f Model::getNormal(int indX, int indY, int indZ)
 		indexEigen = 2;
 	Eigen::Vector3f normalVector = eigenSolver.eigenvectors().col(indexEigen);
 
-	//Eigen::Vector3f innerCenter = Eigen::Vector3f::Zero();
-	//for (auto const& vec : innerList)
-	//	innerCenter += vec;
-	//innerCenter /= innerList.size();
 	innerCenter /= count;
 
 	if (normalVector.dot(point - innerCenter) < 0)
@@ -421,12 +418,12 @@ void Model::getColor(const Point & p)
 
 		if (m_projectionList[i].checkRange(coorX, coorY, coorZ))
 		{
-			color += m_projectionList[i].getColor(coorX, coorY, coorZ);
+			color = m_projectionList[i].getColor(coorX, coorY, coorZ);
 			count++;
 		}
 	}
 	color /= count;
-	m_colorList.push_back(color);
+	m_colorMap[p] = color;
 }
 
 void Model::getColor()

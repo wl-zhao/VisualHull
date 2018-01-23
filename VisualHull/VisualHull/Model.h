@@ -12,7 +12,6 @@
 #include <iostream>
 #include <fstream>
 #include <unordered_map>
-
 using namespace std;
 
 //class Point
@@ -36,6 +35,21 @@ using namespace std;
 //	int x, y, z;
 //};
 typedef cv::Vec3i Point;
+struct HashFunc
+{
+	size_t operator()(const Point & p) const
+	{
+		return (hash<int>()(p[0]) ^ (hash<int>()(p[1]) << 1));
+	}
+};
+struct EqualKey
+{
+	bool operator() (const Point & a, const Point & b) const
+	{
+		return a == b;
+	}
+};
+
 
 // 用于判断投影是否在visual hull内部
 struct Projection
@@ -163,8 +177,10 @@ private:
 
 	std::vector<Projection> m_projectionList;
 	vector<Point> surfacePoints;
-	vector<cv::Vec3b> m_colorList;
-	vector<Eigen::Vector3f> m_normal;
+	//vector<cv::Vec3b> m_colorList;
+	//vector<Eigen::Vector3f> m_normal;
+	unordered_map<Point, cv::Vec3b, HashFunc, EqualKey> m_colorMap;
+	unordered_map<Point, Eigen::Vector3f, HashFunc, EqualKey> m_normal;
 
 	Voxel m_voxel;
 	Voxel m_surface;

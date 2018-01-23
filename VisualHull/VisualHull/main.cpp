@@ -13,9 +13,7 @@ using namespace std;
 
 int main(int argc, char** argv)
 {
-	bool color = true;
-
-
+	bool color = false;
 
 	ofstream fout("timelog.md", ios_base::app);
 	string comment;
@@ -130,8 +128,8 @@ int main(int argc, char** argv)
 			thread with_color(reconstruction_withcolor);
 			with_color.join();
 		}
-		//thread wout_color(reconstruction);
-		//wout_color.join();
+		thread wout_color(reconstruction);
+		wout_color.join();
 	};
 
 	thread with_nm(with_normal);
